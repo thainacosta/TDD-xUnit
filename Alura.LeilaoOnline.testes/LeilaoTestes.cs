@@ -26,6 +26,7 @@ namespace Alura.LeilaoOnline.Testes
             var valorObtido = (leilao.Ganhador.Valor);
             Assert.Equal(valorEsperado, valorObtido);
         }
+
         [Fact]
         public void LeilaoComUmLance()
         {
@@ -42,7 +43,20 @@ namespace Alura.LeilaoOnline.Testes
             var valorEsperado = 800;
             var valorObtido = (leilao.Ganhador.Valor);
             Assert.Equal(valorEsperado, valorObtido);
+        }
 
+        [Fact]
+        public void LeilaoSemLance()
+        {
+            //Arrange
+            var leilao = new Leilao("Van Gogh");
+
+            //Act
+            var valorEsperado = 0;
+            leilao.TerminaPregao();
+
+            //Assert            
+            var valorObtido = (leilao.Ganhador.Valor);
         }
     }
 }
