@@ -3,13 +3,13 @@ using Xunit;
 
 namespace Alura.LeilaoOnline.Testes
 {
-    public class LeilaoTestes
+    public class LeilaoTerminaPregao
     {
         [Theory]
-        [InlineData(new double[] {800, 900, 990, 1000})]
-        [InlineData(new double[] {800, 900, 1000, 880})]
-        [InlineData(new double[] {1000})]
-        public void LeilaoComVariosLances( double [] ofertas)
+        [InlineData(1000, new double[] {800, 900, 990, 1000})]
+        [InlineData(1000, new double[] {800, 900, 1000, 880})]
+        [InlineData(1000, new double[] {1000})]
+        public void RetornaMaiorValorDadoLeilaoComNoMininoUmLance(double valorEsperado, double [] ofertas)
         {
             //Arrange
             var leilao = new Leilao("Van Gogh");
@@ -24,15 +24,13 @@ namespace Alura.LeilaoOnline.Testes
             leilao.TerminaPregao();
 
             //Assert
-            var valorEsperado = 1000;
             var valorObtido = (leilao.Ganhador.Valor);
             Assert.Equal(valorEsperado, valorObtido);
+            
         }
-
-       
-
+        
         [Fact]
-        public void LeilaoSemLance()
+        public void RetornaZeroDadoLeilaoSemLances()
         {
             //Arrange
             var leilao = new Leilao("Van Gogh");
