@@ -6,8 +6,8 @@ namespace Alura.LeilaoOnline.Core
     public enum EstadoLeilao
     {
         LeilaoEmAndamento,
-        LeilaoFinalizado
-
+        LeilaoFinalizado,
+        LeilaoAntesDoPregao
     }
 
     public class Leilao
@@ -17,13 +17,16 @@ namespace Alura.LeilaoOnline.Core
         public IEnumerable<Lance> Lances => _lances;
         public string Peca { get; }
         public Lance Ganhador { get; private set; }
-        public EstadoLeilao? Estado { get; private set; }
+        public EstadoLeilao Estado { get; private set; }
+        public double ValorDestino { get; }
 
-        public Leilao(string peca)
+        public Leilao(string peca, double valorDestino = 0)
         {
             Peca = peca;
             _lances = new List<Lance>();
-           
+            Estado = EstadoLeilao.LeilaoAntesDoPregao;
+            ValorDestino = valorDestino;
+
         }
 
         private bool NovoLanceEhAceito(Interessada cliente, double valor)
@@ -39,13 +42,12 @@ namespace Alura.LeilaoOnline.Core
                 _lances.Add(new Lance(cliente, valor));
                 _ultimoCliente = cliente;
             }
-            
+
         }
 
         public void IniciaPregao()
         {
             Estado = EstadoLeilao.LeilaoEmAndamento;
-
         }
 
         public void TerminaPregao()
@@ -55,10 +57,22 @@ namespace Alura.LeilaoOnline.Core
                 throw new System.InvalidOperationException("Nao é possivel terminar o Pregao sem ele ter iniciado, por isso utilize o metodo IniciaPregao");
             }
 
-            Ganhador = Lances
-                .DefaultIfEmpty(new Lance(null, 0))
-                .OrderBy(l => l.Valor)
-                .LastOrDefault();
+            if (ValorDestino > 0)
+            {
+                //modalidade oferta superior mais proxima
+                Ganhador = Lances.
+                    Where(l => l.Valor > ValorDestino).
+                    OrderBy(l => l.Valor).
+                    FirstOrDefault();                   
+            }
+            else
+            {
+                //modalidade maior valor 
+                Ganhador = Lances
+               .DefaultIfEmpty(new Lance(null, 0))
+               .OrderBy(l => l.Valor)
+               .LastOrDefault();
+            }
 
             Estado = EstadoLeilao.LeilaoFinalizado;
         }
