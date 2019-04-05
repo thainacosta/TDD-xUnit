@@ -8,13 +8,13 @@ namespace Alura.LeilaoOnline.Testes
     {
         [Fact]
         public void NaoAceitaMesmoClienteFazerLAnceConsecutivo()
-        {        
+        {
             //Arrange
             var leilao = new Leilao("Van Gogh");
             var fulano = new Interessada("Fulano", leilao);
             leilao.IniciaPregao();
             leilao.RecebeLance(fulano, 800);
-           
+
 
             //Act - Metodo sob teste            
             leilao.RecebeLance(fulano, 1000);
@@ -26,10 +26,10 @@ namespace Alura.LeilaoOnline.Testes
             Assert.Equal(qtdeEsperada, valorObtido);
         }
         [Theory]
-        [InlineData(1000, new double[] {800, 900, 990, 1000})]
-        [InlineData(1000, new double[] {800, 900, 1000, 880})]
-        [InlineData(1000, new double[] {1000})]
-        public void RetornaMaiorValorDadoLeilaoComNoMininoUmLance(double valorEsperado, double [] ofertas)
+        [InlineData(1000, new double[] { 800, 900, 990, 1000 })]
+        [InlineData(1000, new double[] { 800, 900, 1000, 880 })]
+        [InlineData(1000, new double[] { 1000 })]
+        public void RetornaMaiorValorDadoLeilaoComNoMininoUmLance(double valorEsperado, double[] ofertas)
         {
             //Arrange
             var leilao = new Leilao("Van Gogh");
@@ -56,9 +56,28 @@ namespace Alura.LeilaoOnline.Testes
             //Assert
             var valorObtido = (leilao.Ganhador.Valor);
             Assert.Equal(valorEsperado, valorObtido);
-            
+
         }
-        
+
+        [Fact]
+        public void LancaInvalidOperationExceptionDadoPregaoNaoIniciado()
+        {
+            //Arrange
+            var leilao = new Leilao("Van Gogh");
+
+            try
+            {
+                //Act 
+                leilao.TerminaPregao();
+                Assert.True(false);
+            }
+            catch (System.Exception ex)
+            {
+                //Assert 
+                Assert.IsType<System.InvalidOperationException>(ex);
+            }
+        }
+
         [Fact]
         public void RetornaZeroDadoLeilaoSemLances()
         {
