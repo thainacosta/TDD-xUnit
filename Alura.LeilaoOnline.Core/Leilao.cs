@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Alura.LeilaoOnline.Core
@@ -18,13 +17,13 @@ namespace Alura.LeilaoOnline.Core
         public IEnumerable<Lance> Lances => _lances;
         public string Peca { get; }
         public Lance Ganhador { get; private set; }
-        public EstadoLeilao Estado { get; private set; }
+        public EstadoLeilao? Estado { get; private set; }
 
         public Leilao(string peca)
         {
             Peca = peca;
             _lances = new List<Lance>();
-            Estado = EstadoLeilao.LeilaoEmAndamento;
+           
         }
 
         private bool NovoLanceEhAceito(Interessada cliente, double valor)
@@ -51,6 +50,11 @@ namespace Alura.LeilaoOnline.Core
 
         public void TerminaPregao()
         {
+            if (Estado != EstadoLeilao.LeilaoEmAndamento)
+            {
+                throw new System.InvalidOperationException("Nao é possivel terminar o Pregao sem ele ter iniciado, por isso utilize o metodo IniciaPregao");
+            }
+
             Ganhador = Lances
                 .DefaultIfEmpty(new Lance(null, 0))
                 .OrderBy(l => l.Valor)
