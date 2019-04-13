@@ -14,7 +14,8 @@ namespace Alura.LeilaoOnline.Testes
             double [] ofertas)
         {
             //Arrange
-            var leilao = new Leilao("Van Gogh", valorDestino);
+            IModalidadeAvaliacao modalidade = new OfertaSuperiorMaisProxima(valorDestino);
+            var leilao = new Leilao("Van Gogh", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             var maria = new Interessada("maria", leilao);
 
@@ -47,7 +48,8 @@ namespace Alura.LeilaoOnline.Testes
         public void NaoAceitaMesmoClienteFazerLAnceConsecutivo()
         {
             //Arrange
-            var leilao = new Leilao("Van Gogh");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             leilao.IniciaPregao();
             leilao.RecebeLance(fulano, 800);
@@ -68,8 +70,9 @@ namespace Alura.LeilaoOnline.Testes
         [InlineData(1000, new double[] { 1000 })]
         public void RetornaMaiorValorDadoLeilaoComNoMininoUmLance(double valorEsperado, double[] ofertas)
         {
-            //Arrange
-            var leilao = new Leilao("Van Gogh");
+            //Arraje
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             var maria = new Interessada("maria", leilao);
 
@@ -100,7 +103,8 @@ namespace Alura.LeilaoOnline.Testes
         public void LancaInvalidOperationExceptionDadoPregaoNaoIniciado()
         {
             //Arrange
-            var leilao = new Leilao("Van Gogh");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             
 
             var excecaoObtida = Assert.Throws<System.InvalidOperationException>(
@@ -117,7 +121,8 @@ namespace Alura.LeilaoOnline.Testes
         public void RetornaZeroDadoLeilaoSemLances()
         {
             //Arrange
-            var leilao = new Leilao("Van Gogh");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             leilao.IniciaPregao();
 
             //Act

@@ -13,7 +13,8 @@ namespace Alura.LeilaoOnline.Testes
             int qtdeEsperada, double[] ofertas)
         {
             //Arrange
-            var leilao = new Leilao("Van Gogh");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             var maria = new Interessada("maria", leilao);
             leilao.IniciaPregao();
